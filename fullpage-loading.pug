@@ -1,0 +1,46 @@
+#loading-box
+  .loading-left-bg
+  .loading-right-bg
+  .spinner-box
+    .svg
+
+script.
+  (()=>{
+    const $loadingBox = document.getElementById('loading-box')
+    const $body = document.body
+    const preloader = {
+      endLoading: () => {
+        if ($loadingBox.classList.contains('loaded')) return
+        $body.style.overflow = ''
+        $loadingBox.classList.add('loaded')
+      },
+      initLoading: () => {
+      const svg= document.querySelector(".svg")
+      svg.innerHTML=`<div class="loading"><svg t="1757083249298" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1389" width="128" height="128"><path d="M114.294312 490.542655l236.669689 143.235961a35.590833 35.590833 0 1 1-36.899777 60.959431L17.370064 515.163283a35.590833 35.590833 0 0 1 4.799464-63.390327l926.047296-386.699699a35.590833 35.590833 0 0 1 48.617951 39.517667l-162.184497 854.803299a35.590833 35.590833 0 0 1-54.040722 23.436346L479.863901 792.223271a35.653164 35.653164 0 0 1 38.084061-60.211462l256.490855 162.683142L914.620574 156.32541 114.294312 490.480324z" p-id="1390" fill="#ffffff"></path><path d="M392.039937 694.613385v293.764617a35.590833 35.590833 0 1 1-71.243997 0v-310.095262c0-10.409228 4.550142-20.31981 12.466141-27.113857L766.273494 280.488176a35.590833 35.590833 0 1 1 46.311715 54.165383l-420.482942 359.959826z" p-id="1391" fill="#ffffff"></path></svg></div>`
+      let plist = document.querySelectorAll(".path")
+      plist.forEach(p => {
+         const length = p.getTotalLength()
+         p.style.setProperty("--length", length)
+       })
+
+        $body.style.overflow = 'hidden'
+        $loadingBox.classList.remove('loaded')
+      }
+    }
+
+    preloader.initLoading()
+
+    if (document.readyState === 'complete') {
+      preloader.endLoading()
+    } else {
+      window.addEventListener('load', preloader.endLoading)
+      document.addEventListener('DOMContentLoaded', preloader.endLoading)
+      // Add timeout protection: force end after 7 seconds
+      setTimeout(preloader.endLoading, 7000)
+    }
+
+    if (!{theme.pjax && theme.pjax.enable}) {
+      btf.addGlobalFn('pjaxSend', preloader.initLoading, 'preloader_init')
+      btf.addGlobalFn('pjaxComplete', preloader.endLoading, 'preloader_end')
+    }
+  })()
